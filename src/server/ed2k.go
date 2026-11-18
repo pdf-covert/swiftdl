@@ -49,7 +49,8 @@ func parseED2KLink(url string) (name string, size int64, err error) {
 // 尽力拉一份在线 server.met 补充;可用 SWIFTDL_ED2K_SERVERS 覆盖。
 var ed2kSeedServers = []string{
 	"176.123.5.89:4725",
-	"45.82.80.155:5687",
+	"85.17.116.222:6082",
+	"91.208.162.87:4232",
 }
 
 // 全应用一个 ed2k 会话,首次使用时启动。
@@ -79,8 +80,12 @@ func ed2kSession(dataDir string) (*goed2k.Client, error) {
 	return ed2k.client, ed2k.err
 }
 
-// 连服务器、拉在线列表和 KAD 节点表,全是尽力而为:连不上只影响
-// 找源速度,任务照常排队等。
+// 连服务器、拉在线列表,全是尽力而为:连不上只影响找源速度,任务照常排队等。
+// KAD 不再自动引导:公共 nodes.dat 引导源(2026-11 实测)已全部死亡——
+// nodes.emule-project.org 证书已不匹配该域名,peerates/emule-security 的
+// nodes.dat 要么 401 要么变成 HTML 页,没有节点表 KAD 起不来;且 KAD 是
+// 纯 UDP,不少家庭网络对 UDP 按目标丢弃。找源主力是服务器(TCP),够用。
+// 想启用 KAD 的可用 SWIFTDL_ED2K_KAD_NODES=ip:端口[,ip:端口…] 自备引导节点。
 func ed2kConnect(c *goed2k.Client) {
 	servers := ed2kSeedServers
 	if env := strings.TrimSpace(os.Getenv("SWIFTDL_ED2K_SERVERS")); env != "" {
@@ -92,7 +97,13 @@ func ed2kConnect(c *goed2k.Client) {
 		}
 	}
 	_ = c.ConnectServerMet("https://gruk.org/server.met")
-	_ = c.LoadDHTNodesDat("https://nodes.emule-project.org/nodes.dat")
+	if env := strings.TrimSpace(os.Getenv("SWIFTDL_ED2K_KAD_NODES")); env != "" {
+		for _, n := range strings.Split(env, ",") {
+			if n = strings.TrimSpace(n); n != "" {
+				_ = c.AddDHTBootstrapNodes(n)
+			}
+		}
+	}
 }
 
 // 每个任务的临时目录(按任务 id,同链接的重复任务各下各的)。
@@ -151,6 +162,7 @@ func ed2kRun(ctx context.Context, job ed2kJob, progress *Progress, note *Note) (
 
 	tick := time.NewTicker(500 * time.Millisecond)
 	defer tick.Stop()
+	started := time.Now()
 	for {
 		handle = c.FindTransfer(handle.GetHash())
 		if !handle.IsValid() {
@@ -177,7 +189,14 @@ func ed2kRun(ctx context.Context, job ed2kJob, progress *Progress, note *Note) (
 			note.Set("")
 			return OutcomeCompleted, nil
 		case st.NumPeers == 0:
-			note.Set("正在寻找来源")
+			// 找了半天还零来源:电驴网络上没人分享就是没人分享
+			//(服务器已连上、搜索都正常,2016 年的旧文件常见这种),
+			// 把话挑明,别让用户以为卡死了。
+			if time.Since(started) > 5*time.Minute {
+				note.Set("正在寻找来源 · 暂无来源,该文件可能已无人分享")
+			} else {
+				note.Set("正在寻找来源")
+			}
 		case st.NumPeers == 1:
 			note.Set("正在从 1 个来源下载")
 		default:
