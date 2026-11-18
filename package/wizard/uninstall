@@ -1,0 +1,33 @@
+[
+  {
+    "stepTitle": "确认卸载",
+    "items": [
+      {
+        "type": "tips",
+        "helpText": "已下载的文件保存在你自己授权的共享文件夹里，卸载不会动它们。"
+      },
+      {
+        "type": "radio",
+        "field": "wizard_keep_records",
+        "label": "应用数据",
+        "initValue": "keep",
+        "options": [
+          {
+            "label": "保留任务列表与 BT 断点（推荐）- 重新安装后可继续",
+            "value": "keep"
+          },
+          {
+            "label": "删除应用数据 - 任务列表、设置、BT 做种信息与上传的种子将被删除；已下载的文件不受影响",
+            "value": "delete"
+          }
+        ],
+        "rules": [
+          {
+            "required": true,
+            "message": "请选择应用数据保留选项"
+          }
+        ]
+      }
+    ]
+  }
+]

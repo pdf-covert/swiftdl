@@ -1,0 +1,10 @@
+ui/node_modules/
+ui/www/
+package/app/server/
+package/app/www/
+package/manifest.bak*
+package/*.fpk
+dist/
+.DS_Store
+
+docs/ref/

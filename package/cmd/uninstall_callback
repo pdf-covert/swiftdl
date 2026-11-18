@@ -1,0 +1,13 @@
+#!/bin/bash
+
+### Called after uninstall. fnOS keeps the var dir by default; when the
+### user picks "delete" in wizard/uninstall, wipe downloads, task list and
+### BT piece-completion data.
+
+if [ "${wizard_keep_records}" = "delete" ]; then
+    if [ -n "${TRIM_PKGVAR}" ] && [ -d "${TRIM_PKGVAR}" ]; then
+        rm -rf "${TRIM_PKGVAR}"
+    fi
+fi
+
+exit 0

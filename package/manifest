@@ -1,0 +1,13 @@
+appname               = swiftdl
+version               = 0.0.1
+display_name          = SwiftDL 下载
+desc                  = 多连接并行下载器，支持 HTTP/HTTPS 多线程分片下载、断点续传、动态分段、镜像合并、Metalink、批量编号链接，以及 BitTorrent 下载与做种。每个任务最多 32 条连接写入同一预分配文件，闲置连接自动窃取最大剩余分段；SHA-256 校验、分类归档（视频/音乐/程序等）、全局限速、定时开始、失败自动重试。基于 harshsinghsv/swiftdl 移植，后端改为 Go，界面全中文。
+changelog             = 0.0.1：首个公开版本。
+platform              = x86
+source                = thirdparty
+maintainer            = pdf-covert/swiftdl
+maintainer_url        = https://github.com/pdf-covert/swiftdl
+distributor           = pdf-covert/swiftdl
+distributor_url       = https://github.com/pdf-covert/swiftdl
+desktop_uidir         = ui
+desktop_applaunchname = swiftdl.Application

@@ -1,0 +1,5 @@
+#!/bin/bash
+
+### This script is called by fnOS. See file name for the timing.
+
+exit 0
