@@ -1,8 +1,8 @@
 appname               = swiftdl
-version               = 0.0.2
+version               = 0.0.1
 display_name          = SwiftDL 下载
 desc                  = 多连接并行下载器，支持 HTTP/HTTPS 多线程分片下载、断点续传、动态分段、镜像合并、Metalink、批量编号链接，以及 BitTorrent 下载与做种。每个任务最多 32 条连接写入同一预分配文件，闲置连接自动窃取最大剩余分段；SHA-256 校验、分类归档（视频/音乐/程序等）、全局限速、定时开始、失败自动重试。基于 harshsinghsv/swiftdl 移植，后端改为 Go，界面全中文。
-changelog             = 0.0.2：电驴（ed2k）找源修复与提示改进——KAD 引导用的公共 nodes.dat 源已全部失效（原 nodes.emule-project.org 证书不再匹配该域名，peerates / emule-security 的 nodes.dat 要么 401 要么变成网页），此前每次启动都白拉一轮还拉不到；现在去掉死链（想启用 KAD 可用环境变量 SWIFTDL_ED2K_KAD_NODES 自备引导节点），内置种子服务器更换了两个已下线的地址。电驴网络本身正常：实测服务器搜索返回 400+ 结果、有完整来源的文件能正常连上并下载数据。找不到来源的老文件（如 Win10 1511 ISO 这类 2016 年的旧资源）在网络上已无人分享，任何电驴客户端都下不动——现在任务找源超过 5 分钟仍为零时会明确提示「暂无来源，该文件可能已无人分享」，不再让人误以为卡死。 0.0.1：首个公开版本。
+changelog             = 0.0.1：首个公开版本。
 platform              = x86
 source                = thirdparty
 maintainer            = pdf-covert/swiftdl
